@@ -1,0 +1,70 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String            @id @default(uuid())
+  name                String            @db.VarChar(191)
+  email               String            @unique @db.VarChar(191)
+  password            String
+  profile             UserProfile?
+  trips               Trip[]            // Define this relation
+  travelBuddyRequests TravelBuddyRequest[]  // Define this relation
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+
+  @@unique([email, id])
+}
+
+model Trip {
+  id                    String            @id @default(uuid())
+  user                  User              @relation(fields: [userId], references: [id])
+  userId                String
+  travelBuddyRequests   TravelBuddyRequest[]
+  destination           String
+  startDate             String
+  endDate               String
+  budget                Float
+  activities            String[]
+  createdAt             DateTime          @default(now())
+  updatedAt             DateTime          @updatedAt
+
+  @@unique([id])
+}
+
+model TravelBuddyRequest {
+  id             String            @id @default(uuid())
+  user           User              @relation(fields: [userId], references: [id])
+  userId         String
+  trip           Trip              @relation(fields: [tripId], references: [id])
+  tripId         String
+  status         Status            @default(PENDING)
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@unique([id])
+}
+
+model UserProfile {
+  id               String            @id @default(uuid())
+  user             User?             @relation(fields: [userId], references: [id])
+  userId           String            @unique
+  bio              String
+  age              Int
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@unique([id])
+}
+
+
+enum Status {
+  PENDING
+  APPROVED
+  REJECTED
+} 
