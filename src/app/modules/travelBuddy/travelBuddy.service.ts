@@ -57,7 +57,7 @@ const getTravelBuddyDb = async (tripId: string) => {
     include: {
       user: {
         select: {
-          name: true,
+          username: true,
           email: true,
         },
       },

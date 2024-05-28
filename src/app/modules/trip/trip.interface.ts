@@ -5,11 +5,12 @@ export interface TTrip {
   startDate: string;
   endDate: string;
   budget: number;
-  activities: string[];
+  type: string;
+  images: string[];
+  description: string;
   createdAt: Date;
   updatedAt: Date;
 }
-
 export type ITripFilterRequest = {
   searchTerm?: string | undefined;
   destination?: string | undefined;

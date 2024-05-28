@@ -10,7 +10,6 @@ import { Prisma } from '@prisma/client';
 
 const createTripDB = async (id: string, payload: TTrip) => {
   try {
-    // Check if user already exists
     const userExists = await UserModel.isUserExistsById(id);
     if (!userExists) {
       throw new AppError(httpStatus.BAD_REQUEST, 'This User does not exist');
@@ -30,7 +29,8 @@ const createTripDB = async (id: string, payload: TTrip) => {
       startDate: result.startDate,
       endDate: result.endDate,
       budget: result.budget,
-      activities: result.activities,
+      description: result.description,
+      images: result.images, // Assuming 'images' field exists in the result
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
     };

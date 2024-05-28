@@ -3,24 +3,20 @@ import * as z from 'zod';
 const TripSchema = z.object({
   userId: z.string().optional(),
   destination: z.string({
-    required_error: 'destination is required',
+    required_error: 'Destination is required',
+  }),
+  description: z.string({
+    required_error: 'description is required',
   }),
   startDate: z.string({
-    required_error: 'startDate is required',
+    required_error: 'Start date is required',
   }),
   endDate: z.string({
-    required_error: 'endDate is required',
+    required_error: 'End date is required',
   }),
-  budget: z.number({
-    required_error: 'budget is required',
-  }),
-  activities: z.array(
-    z.string({
-      required_error: 'activities is required',
-    }),
-  ),
+  type: z.string().optional(),
+  images: z.array(z.string()).optional(),
 });
-
 export const TripValidation = {
   TripSchema,
 };

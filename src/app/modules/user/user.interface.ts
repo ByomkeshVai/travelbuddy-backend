@@ -4,8 +4,8 @@ export interface TProfile {
 }
 
 export interface TUserProfile {
-  name: string;
+  username: any;
   email: string;
   password: string;
-  profile: TProfile;
+  profile?: TProfile;
 }

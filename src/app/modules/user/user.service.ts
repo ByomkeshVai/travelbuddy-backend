@@ -16,10 +16,17 @@ const loginUser = async (userEmail: string, password: string) => {
     );
   }
 
-  const userExists = await UserModel.getUserByEmail(userEmail);
+  const userExists = await prisma.user.findUnique({
+    where: {
+      email: userEmail,
+    },
+  });
+
   if (!userExists) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
+
+  console.log(userExists);
 
   if (
     userExists.password &&
@@ -28,19 +35,28 @@ const loginUser = async (userEmail: string, password: string) => {
     throw new AppError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
   }
 
-  const { id, name, email } = userExists;
+  const jwtPayload = {
+    username: userExists.username,
+    id: userExists.id,
+    role: userExists.role,
+    email: userExists.email,
+  };
 
   const accessToken = createToken(
-    { id, email },
+    jwtPayload,
     config.jwt_access_secret as string,
     config.jwt_access_expires_in as string,
   );
 
+  const refreshToken = createToken(
+    jwtPayload,
+    config.jwt_refresh_secret as string,
+    config.jwt_refresh_expires_in as string,
+  );
+
   return {
-    id,
-    name,
-    email: userEmail,
-    token: accessToken,
+    accessToken,
+    refreshToken,
   };
 };
 
@@ -63,28 +79,38 @@ const registerUserDB = async (payload: TUserProfile) => {
     const result = await prisma.$transaction(async (transactionClient) => {
       const newUser = await transactionClient.user.create({
         data: {
-          name: payload.name,
+          username: payload.username,
           email: payload.email,
           password: hashedPassword,
-        },
-      });
-
-      await transactionClient.userProfile.create({
-        data: {
-          bio: payload?.profile?.bio,
-          age: payload?.profile?.age,
-          user: {
-            connect: {
-              id: newUser.id,
-            },
-          },
         },
       });
 
       return newUser;
     });
 
-    return result;
+    const jwtPayload = {
+      username: result.username,
+      id: result.id,
+      role: result.role,
+      email: result.email,
+    };
+
+    const accessToken = createToken(
+      jwtPayload,
+      config.jwt_access_secret as string,
+      config.jwt_access_expires_in as string,
+    );
+
+    const refreshToken = createToken(
+      jwtPayload,
+      config.jwt_refresh_secret as string,
+      config.jwt_refresh_expires_in as string,
+    );
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   } catch (error: any) {
     throw new AppError(httpStatus.BAD_REQUEST, error?.message);
   }
@@ -97,7 +123,7 @@ const getAllUserDb = async (id: string) => {
     },
     select: {
       id: true,
-      name: true,
+      username: true,
       email: true,
       createdAt: true,
       updatedAt: true,
