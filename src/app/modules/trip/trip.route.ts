@@ -6,7 +6,7 @@ import auth from '../../middlewares/auth';
 const router = express.Router();
 
 router.post(
-  '/trips',
+  '/add-trip',
   auth(),
   validateRequest(TripValidation.TripSchema),
   tripController.createTripController,

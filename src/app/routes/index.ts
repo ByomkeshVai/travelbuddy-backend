@@ -11,7 +11,7 @@ const moduleRoutes = [
     route: UserRoutes,
   },
   {
-    path: '/trip',
+    path: '/trips',
     route: tripRoutes,
   },
   {

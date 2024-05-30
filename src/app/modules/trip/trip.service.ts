@@ -10,18 +10,22 @@ import { Prisma } from '@prisma/client';
 
 const createTripDB = async (id: string, payload: TTrip) => {
   try {
+    // Check if the user exists
     const userExists = await UserModel.isUserExistsById(id);
     if (!userExists) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'This User does not exist');
+      throw new AppError(httpStatus.NOT_FOUND, 'This User does not exist');
     }
 
+    // Create a new trip
     const result = await prisma.trip.create({
       data: {
         ...payload,
         userId: id,
+        photos: payload.photos,
       },
     });
 
+    // Format the result
     const formattedResult = {
       id: result.id,
       userId: result.userId,
@@ -30,14 +34,17 @@ const createTripDB = async (id: string, payload: TTrip) => {
       endDate: result.endDate,
       budget: result.budget,
       description: result.description,
-      images: result.images, // Assuming 'images' field exists in the result
+      photos: result.photos,
       createdAt: result.createdAt,
       updatedAt: result.updatedAt,
     };
 
     return formattedResult;
   } catch (error: any) {
-    throw new AppError(httpStatus.BAD_REQUEST, error?.message);
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      error?.message || 'An error occurred while creating the trip',
+    );
   }
 };
 

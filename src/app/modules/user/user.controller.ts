@@ -25,13 +25,7 @@ const registerUserController = catchAsync(async (req, res) => {
     success: true,
     statusCode: httpStatus.CREATED,
     message: 'User registered successfully',
-    data: {
-      id: result.id,
-      name: result.name,
-      email: result.email,
-      createdAt: result.createdAt,
-      updatedAt: result.updatedAt,
-    },
+    data: result,
   });
 });
 

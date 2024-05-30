@@ -1,4 +1,5 @@
 export interface TTrip {
+  photos: any;
   id: string;
   userId: string;
   destination: string;
