@@ -5,6 +5,7 @@ export interface TravelBuddyRequest {
   tripId: string;
   userId: string;
   status: Status;
+  notes: string;
   createdAt: Date;
   updatedAt: Date;
 }

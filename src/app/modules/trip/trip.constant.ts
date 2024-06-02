@@ -3,6 +3,8 @@ export const tripSearchableFields: string[] = [
   'startDate',
   'endDate',
   'budget',
+  'description',
+  'type',
 ];
 
 export const tripFilterableFields: string[] = [
@@ -10,4 +12,6 @@ export const tripFilterableFields: string[] = [
   'startDate',
   'endDate',
   'budget',
+  'description',
+  'type',
 ];

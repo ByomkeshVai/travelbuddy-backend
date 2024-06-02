@@ -19,4 +19,6 @@ export type ITripFilterRequest = {
   endDate?: string | undefined;
   maxBudget?: number | undefined;
   minBudget?: number | undefined;
+  type?: string | undefined;
+  description?: string | undefined;
 };

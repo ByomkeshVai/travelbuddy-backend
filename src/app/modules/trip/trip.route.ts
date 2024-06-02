@@ -11,6 +11,7 @@ router.post(
   validateRequest(TripValidation.TripSchema),
   tripController.createTripController,
 );
-router.get('/trips', tripController.getAllTripController);
+router.get('/', tripController.getAllTripController);
+router.get('/:tripId', tripController.getSignelTripController);
 
 export const tripRoutes = router;

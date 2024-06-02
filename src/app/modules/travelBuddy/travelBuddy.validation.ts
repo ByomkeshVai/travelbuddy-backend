@@ -2,6 +2,7 @@ import * as z from 'zod';
 const TravelBuddyRequestSchema = z.object({
   tripId: z.string().optional(),
   userId: z.string().optional(),
+  notes: z.string().optional(),
   status: z.string().optional().default('PENDING'),
 });
 

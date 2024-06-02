@@ -55,7 +55,8 @@ const getAllTripFromDB = async (
   try {
     const { limit, page, skip } =
       paginationHelpers.calculatePagination(options);
-    const { destination, startDate, endDate, searchTerm } = filters;
+    const { destination, startDate, endDate, type, description, searchTerm } =
+      filters;
     const { minBudget, maxBudget } = filters;
 
     const andConditions: Prisma.TripWhereInput[] = [];
@@ -63,6 +64,13 @@ const getAllTripFromDB = async (
     // Add filters based on query parameters
     if (destination) {
       andConditions.push({ destination: { contains: destination } });
+    }
+    // Add filters based on query parameters
+    if (description) {
+      andConditions.push({ description: { contains: description } });
+    }
+    if (type) {
+      andConditions.push({ type: { contains: type } });
     }
     if (startDate) {
       andConditions.push({ startDate: { gte: startDate } });
@@ -113,7 +121,22 @@ const getAllTripFromDB = async (
   }
 };
 
+const getSingleTrip = async (tripId: string) => {
+  const tripExists = await prisma.trip.findUnique({
+    where: {
+      id: tripId,
+    },
+  });
+
+  if (!tripExists) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'This Trip does not exist');
+  }
+
+  return tripExists;
+};
+
 export const tripService = {
   createTripDB,
   getAllTripFromDB,
+  getSingleTrip,
 };

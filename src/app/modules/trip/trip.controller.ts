@@ -32,7 +32,19 @@ const getAllTripController = catchAsync(async (req, res) => {
   });
 });
 
+const getSignelTripController = catchAsync(async (req, res) => {
+  const { tripId } = req.params;
+  const result = await tripService.getSingleTrip(tripId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Single Trip retrieved successfully',
+    data: result,
+  });
+});
+
 export const tripController = {
   createTripController,
   getAllTripController,
+  getSignelTripController,
 };

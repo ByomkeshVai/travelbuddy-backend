@@ -3,8 +3,12 @@ import AppError from '../../errors/AppError';
 import UserModel from '../user/user.model';
 import prisma from '../../../DB/db.config';
 import { Status } from '../../interface/common';
+import { TravelBuddyRequest } from './travelBuddy.interface';
 
-const createTravelBuddyDB = async (tripId: string, userId: string) => {
+const createTravelBuddyDB = async (payload: TravelBuddyRequest) => {
+  const { tripId, userId } = payload;
+
+  console.log(tripId, userId);
   try {
     const tripExists = await prisma.trip.findUnique({
       where: {
@@ -34,16 +38,7 @@ const createTravelBuddyDB = async (tripId: string, userId: string) => {
       },
     });
 
-    const formattedResult = {
-      id: result.id,
-      userId: result.userId,
-      tripId: result.tripId,
-      status: result.status,
-      createdAt: result.createdAt,
-      updatedAt: result.updatedAt,
-    };
-
-    return formattedResult;
+    return result;
   } catch (error: any) {
     throw new AppError(httpStatus.BAD_REQUEST, error?.message);
   }

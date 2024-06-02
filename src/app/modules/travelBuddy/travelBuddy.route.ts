@@ -7,7 +7,7 @@ import auth from '../../middlewares/auth';
 const router = express.Router();
 
 router.post(
-  '/trip/:tripId/request',
+  '/request',
   auth(),
   validateRequest(TravelBuddyValidation.TravelBuddyRequestSchema),
   travelBuddyController.createTravelBuddyController,

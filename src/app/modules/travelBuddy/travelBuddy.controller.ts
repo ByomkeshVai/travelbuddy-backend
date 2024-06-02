@@ -4,10 +4,9 @@ import sendResponse from '../../utils/sendRequest';
 import { travelBuddyService } from './travelBuddy.service';
 
 const createTravelBuddyController = catchAsync(async (req, res) => {
-  const { tripId } = req.params;
-  const { userId } = req.body;
+  const payload = req.body;
 
-  const result = await travelBuddyService.createTravelBuddyDB(tripId, userId);
+  const result = await travelBuddyService.createTravelBuddyDB(payload);
 
   return sendResponse(res, {
     success: true,
