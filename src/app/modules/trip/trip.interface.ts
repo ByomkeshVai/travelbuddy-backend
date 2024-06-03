@@ -14,11 +14,4 @@ export interface TTrip {
 }
 export type ITripFilterRequest = {
   searchTerm?: string | undefined;
-  destination?: string | undefined;
-  startDate?: string | undefined;
-  endDate?: string | undefined;
-  maxBudget?: number | undefined;
-  minBudget?: number | undefined;
-  type?: string | undefined;
-  description?: string | undefined;
 };

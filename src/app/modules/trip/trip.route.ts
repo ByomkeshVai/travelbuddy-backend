@@ -13,5 +13,6 @@ router.post(
 );
 router.get('/', tripController.getAllTripController);
 router.get('/:tripId', tripController.getSignelTripController);
+router.get('/user-trips/:userId', tripController.getAllRequestTrips);
 
 export const tripRoutes = router;

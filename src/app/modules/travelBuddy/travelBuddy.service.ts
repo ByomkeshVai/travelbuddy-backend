@@ -8,7 +8,6 @@ import { TravelBuddyRequest } from './travelBuddy.interface';
 const createTravelBuddyDB = async (payload: TravelBuddyRequest) => {
   const { tripId, userId } = payload;
 
-  console.log(tripId, userId);
   try {
     const tripExists = await prisma.trip.findUnique({
       where: {

@@ -135,8 +135,50 @@ const getSingleTrip = async (tripId: string) => {
   return tripExists;
 };
 
+const getAllRequestTripFromDB = async (
+  filters: ITripFilterRequest,
+  options: IPaginationOptions,
+  userId: string,
+) => {
+  console.log(userId);
+  try {
+    const { searchTerm } = filters;
+
+    const andConditions: Prisma.TripWhereInput[] = [];
+
+    if (searchTerm) {
+      andConditions.push({
+        OR: tripSearchableFields.map((field) => ({
+          [field]: { contains: searchTerm, mode: 'insensitive' },
+        })),
+      });
+    }
+
+    const result = await prisma.travelBuddyRequest.findMany({
+      where: {
+        userId: userId,
+      },
+      include: {
+        trip: true,
+      },
+      orderBy: options.sortBy
+        ? { [options.sortBy]: options.sortOrder || 'asc' }
+        : undefined,
+    });
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to get all Trip',
+      error,
+    );
+  }
+};
+
 export const tripService = {
   createTripDB,
   getAllTripFromDB,
   getSingleTrip,
+  getAllRequestTripFromDB,
 };

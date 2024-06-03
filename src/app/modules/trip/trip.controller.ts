@@ -4,6 +4,8 @@ import sendResponse from '../../utils/sendRequest';
 import { tripService } from './trip.service';
 import picker from '../../utils/picker';
 import { tripFilterableFields } from './trip.constant';
+import { ITripFilterRequest } from './trip.interface';
+import { IPaginationOptions } from '../../utils/pagination';
 
 const createTripController = catchAsync(async (req, res) => {
   const payload = req.body;
@@ -43,8 +45,35 @@ const getSignelTripController = catchAsync(async (req, res) => {
   });
 });
 
+const getAllRequestTrips = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  console.log(userId);
+  const filters: ITripFilterRequest = req.query;
+  const options: IPaginationOptions = {
+    limit: parseInt(req.query.limit as string, 10) || 10,
+    page: parseInt(req.query.page as string, 10) || 1,
+    sortBy: req.query.sortBy as string,
+    sortOrder: (req.query.sortOrder as 'asc' | 'desc') || 'asc',
+  };
+
+  const result = await tripService.getAllRequestTripFromDB(
+    filters,
+    options,
+    userId,
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Trip retrieved successfully',
+    data: result,
+  });
+});
+
 export const tripController = {
   createTripController,
   getAllTripController,
   getSignelTripController,
+  getAllRequestTrips,
 };
