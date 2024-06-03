@@ -140,7 +140,6 @@ const getAllRequestTripFromDB = async (
   options: IPaginationOptions,
   userId: string,
 ) => {
-  console.log(userId);
   try {
     const { searchTerm } = filters;
 

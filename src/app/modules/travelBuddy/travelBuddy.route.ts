@@ -14,8 +14,8 @@ router.post(
 );
 
 router.put(
-  '/travel-buddies/:buddyId/respond',
-  auth(),
+  '/update-trip/:buddyId/respond',
+  // auth(),
   travelBuddyController.updateStatusTravelBuddyController,
 );
 
