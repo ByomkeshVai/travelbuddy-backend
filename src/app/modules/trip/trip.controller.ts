@@ -71,9 +71,36 @@ const getAllRequestTrips = catchAsync(async (req, res) => {
   });
 });
 
+const getAllUserTrips = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const result = await tripService.getTripFromUser(userId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user All Trip retrieved successfully',
+    data: result,
+  });
+});
+const deleteTrips = catchAsync(async (req, res) => {
+  const { tripId } = req.params;
+
+  const result = await tripService.deleteTrip(tripId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user All Trip retrieved successfully',
+    data: result,
+  });
+});
+
 export const tripController = {
   createTripController,
   getAllTripController,
   getSignelTripController,
   getAllRequestTrips,
+  getAllUserTrips,
+  deleteTrips,
 };

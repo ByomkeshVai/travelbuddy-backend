@@ -175,9 +175,48 @@ const getAllRequestTripFromDB = async (
   }
 };
 
+const getTripFromUser = async (userId: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (!user) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'This User does not exist');
+  }
+  const tripExists = await prisma.trip.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+
+  return tripExists;
+};
+const deleteTrip = async (tripId: string) => {
+  const findtrip = await prisma.trip.findUnique({
+    where: {
+      id: tripId,
+    },
+  });
+
+  if (!findtrip) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'This Trip does not exist');
+  }
+  const deleteTrip = await prisma.trip.delete({
+    where: {
+      id: tripId,
+    },
+  });
+
+  return deleteTrip;
+};
+
 export const tripService = {
   createTripDB,
   getAllTripFromDB,
   getSingleTrip,
   getAllRequestTripFromDB,
+  getTripFromUser,
+  deleteTrip,
 };
