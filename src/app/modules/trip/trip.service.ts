@@ -121,6 +121,22 @@ const getAllTripFromDB = async (
   }
 };
 
+const getAllTrips = async () => {
+  try {
+    const result = await prisma.trip.findMany({});
+
+    console.log(result);
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Failed to get all Trip',
+      error,
+    );
+  }
+};
+
 const getSingleTrip = async (tripId: string) => {
   const tripExists = await prisma.trip.findUnique({
     where: {
@@ -212,6 +228,33 @@ const deleteTrip = async (tripId: string) => {
   return deleteTrip;
 };
 
+const updateTrip = async (tripId: string, payload: any) => {
+  const findTrip = await prisma.trip.findUnique({
+    where: {
+      id: tripId,
+    },
+  });
+
+  if (!findTrip) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'This Trip does not exist');
+  }
+
+  const updatedTrip = await prisma.trip.update({
+    where: {
+      id: tripId,
+    },
+    data: {
+      description: payload.description,
+      destination: payload.destination,
+      startDate: payload.startDate,
+      type: payload.type,
+      endDate: payload.endDate,
+    },
+  });
+
+  return updatedTrip;
+};
+
 export const tripService = {
   createTripDB,
   getAllTripFromDB,
@@ -219,4 +262,6 @@ export const tripService = {
   getAllRequestTripFromDB,
   getTripFromUser,
   deleteTrip,
+  updateTrip,
+  getAllTrips,
 };

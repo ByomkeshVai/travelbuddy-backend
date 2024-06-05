@@ -15,6 +15,8 @@ router.get('/', tripController.getAllTripController);
 router.get('/:tripId', tripController.getSignelTripController);
 router.get('/user-trips/:userId', tripController.getAllRequestTrips);
 router.get('/all-trips/:userId', tripController.getAllUserTrips);
-router.get('/delete/:tripId', tripController.deleteTrips);
+router.delete('/delete/:tripId', tripController.deleteTrips);
+router.put('/update/:tripId', tripController.updateTrip);
+router.get('/all', tripController.getAllTrip);
 
 export const tripRoutes = router;

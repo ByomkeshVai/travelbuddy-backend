@@ -16,6 +16,7 @@ model User {
   profile             UserProfile?
   trips               Trip[]            // Define this relation
   travelBuddyRequests TravelBuddyRequest[]  // Define this relation
+  status String @default("active")
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
 

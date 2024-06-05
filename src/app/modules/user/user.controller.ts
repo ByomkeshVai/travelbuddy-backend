@@ -54,10 +54,79 @@ const updateUserController = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const UpdateUserStatusController = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const { status } = req.body;
 
+  const result = await UserService.UpdateUserStatus(userId, status);
+
+  return sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User profile Status Updated successfully',
+    data: result,
+  });
+});
+const UpdateUserRoleController = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+  const { role } = req.body;
+
+  const result = await UserService.UpdateUserStatus(userId, role);
+
+  return sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User profile Role Updated successfully',
+    data: result,
+  });
+});
+
+const getAllUsers = catchAsync(async (req, res) => {
+  const result = await UserService.getAllUsers();
+
+  return sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'User profile Get successfully',
+    data: result,
+  });
+});
+
+const changePassword = catchAsync(async (req, res) => {
+  const payload = req.body;
+  const { userId } = req.params;
+
+  console.log(payload);
+
+  const result = await UserService.changePassword(userId, payload);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Password Changed successfully',
+    data: result,
+  });
+});
+const getSingleUser = catchAsync(async (req, res) => {
+  const { userId } = req.params;
+
+  const result = await UserService.getSingleUser(userId);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'User Fetched in successfully',
+    data: result,
+  });
+});
 export const UserController = {
   registerUserController,
   loginUser,
   getTUserController,
   updateUserController,
+  getAllUsers,
+  UpdateUserStatusController,
+  UpdateUserRoleController,
+  changePassword,
+  getSingleUser,
 };

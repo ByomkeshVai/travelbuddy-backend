@@ -26,7 +26,9 @@ const loginUser = async (userEmail: string, password: string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
 
-  console.log(userExists);
+  if (userExists.status !== 'active') {
+    throw new AppError(httpStatus.NOT_FOUND, 'User is not active');
+  }
 
   if (
     userExists.password &&
@@ -144,7 +146,7 @@ const UpdateUserDB = async (id: string, payload: any) => {
     });
 
     if (!tripExists) {
-      throw new AppError(httpStatus.BAD_REQUEST, 'This Trip does not exist');
+      throw new AppError(httpStatus.BAD_REQUEST, 'This User does not exist');
     }
 
     const result = await prisma.user.update({
@@ -156,7 +158,7 @@ const UpdateUserDB = async (id: string, payload: any) => {
       },
       select: {
         id: true,
-        name: true,
+        username: true,
         email: true,
         createdAt: true,
         updatedAt: true,
@@ -169,9 +171,145 @@ const UpdateUserDB = async (id: string, payload: any) => {
   }
 };
 
+const UpdateUserStatus = async (userId: string, status: string) => {
+  try {
+    const userExixts = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!userExixts) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'This User does not exist');
+    }
+
+    const result = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        status,
+      },
+    });
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(httpStatus.BAD_REQUEST, error?.message);
+  }
+};
+
+const UpdateUserRole = async (userId: string, role: string) => {
+  try {
+    const userExixts = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!userExixts) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'This User does not exist');
+    }
+
+    const result = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        role,
+      },
+    });
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(httpStatus.BAD_REQUEST, error?.message);
+  }
+};
+
+const changePassword = async (userId: string, payload: any) => {
+  const { password, newPassword } = payload;
+  try {
+    const userExists = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!userExists) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'This User does not exist');
+    }
+
+    if (userExists.status !== 'active') {
+      throw new AppError(httpStatus.NOT_FOUND, 'User is not active');
+    }
+
+    if (
+      userExists.password &&
+      !(await AuthUtils.comparePasswords(password, userExists.password))
+    ) {
+      throw new AppError(httpStatus.UNAUTHORIZED, 'Password is incorrect');
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const result = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return result;
+  } catch (error: any) {
+    throw new AppError(httpStatus.BAD_REQUEST, error?.message);
+  }
+};
+
+const getAllUsers = async () => {
+  const userExists = await prisma.user.findMany({
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      status: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
+
+  return userExists;
+};
+const getSingleUser = async (userId: string) => {
+  const userExists = await prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      username: true,
+      email: true,
+      status: true,
+      role: true,
+      createdAt: true,
+      updatedAt: true,
+      travelBuddyRequests: true,
+    },
+  });
+
+  return userExists;
+};
+
 export const UserService = {
   registerUserDB,
   loginUser,
   getAllUserDb,
   UpdateUserDB,
+  getAllUsers,
+  UpdateUserStatus,
+  UpdateUserRole,
+  changePassword,
+  getSingleUser,
 };

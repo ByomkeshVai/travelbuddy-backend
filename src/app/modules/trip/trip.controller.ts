@@ -71,6 +71,16 @@ const getAllRequestTrips = catchAsync(async (req, res) => {
   });
 });
 
+const getAllTrip = catchAsync(async (req, res) => {
+  const result = await tripService.getAllTrips();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: ' All Trip retrieved successfully',
+    data: result,
+  });
+});
 const getAllUserTrips = catchAsync(async (req, res) => {
   const { userId } = req.params;
 
@@ -83,10 +93,27 @@ const getAllUserTrips = catchAsync(async (req, res) => {
     data: result,
   });
 });
+
 const deleteTrips = catchAsync(async (req, res) => {
   const { tripId } = req.params;
 
   const result = await tripService.deleteTrip(tripId);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user All Trip retrieved successfully',
+    data: result,
+  });
+});
+
+const updateTrip = catchAsync(async (req, res) => {
+  const { tripId } = req.params;
+  const payload = req.body;
+
+  console.log(payload);
+
+  const result = await tripService.updateTrip(tripId, payload);
 
   sendResponse(res, {
     success: true,
@@ -103,4 +130,6 @@ export const tripController = {
   getAllRequestTrips,
   getAllUserTrips,
   deleteTrips,
+  updateTrip,
+  getAllTrip,
 };

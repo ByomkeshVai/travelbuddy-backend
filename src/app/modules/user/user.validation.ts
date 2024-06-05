@@ -39,8 +39,18 @@ const updateValidation = z.object({
   }),
 });
 
+const updatePasswordValidation = z.object({
+  password: z.string({
+    required_error: 'Old Password is required',
+  }),
+  newPassword: z.string({
+    required_error: 'New Password is required',
+  }),
+});
+
 export const UserProfileValidation = {
   UserProfileSchema,
   loginValidationSchema,
   updateValidation,
+  updatePasswordValidation,
 };

@@ -18,12 +18,28 @@ router.post(
 );
 
 router.get('/profile', auth(), UserController.getTUserController);
+router.get('/', auth(), UserController.getAllUsers);
+router.get('/single-user/:userId', auth(), UserController.getSingleUser);
+
+router.put(
+  '/status/:userId',
+  auth(),
+  UserController.UpdateUserStatusController,
+);
+
+router.put('/role/:userId', auth(), UserController.UpdateUserRoleController);
 
 router.put(
   '/profile',
   auth(),
   validateRequest(UserProfileValidation.updateValidation),
   UserController.updateUserController,
+);
+router.put(
+  '/changePassword/:userId',
+  auth(),
+  // validateRequest(UserProfileValidation.updatePasswordValidation),
+  UserController.changePassword,
 );
 
 export const UserRoutes = router;
