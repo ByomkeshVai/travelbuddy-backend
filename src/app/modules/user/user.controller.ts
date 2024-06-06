@@ -96,8 +96,6 @@ const changePassword = catchAsync(async (req, res) => {
   const payload = req.body;
   const { userId } = req.params;
 
-  console.log(payload);
-
   const result = await UserService.changePassword(userId, payload);
 
   sendResponse(res, {
