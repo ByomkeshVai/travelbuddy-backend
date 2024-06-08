@@ -44,7 +44,6 @@
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.10",
     "prisma": "^5.13.0-dev.22",
-    "smartcar": "^9.8.0",
     "validator": "^13.11.0",
     "ws": "^8.16.0",
     "zod": "^3.22.4"

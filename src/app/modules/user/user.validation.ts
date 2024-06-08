@@ -1,13 +1,5 @@
 import * as z from 'zod';
 
-const userProfileSchema = z.object({
-  bio: z.string({
-    required_error: 'Bio is required',
-  }),
-  age: z.number({
-    required_error: 'Age is required',
-  }),
-});
 const UserProfileSchema = z.object({
   username: z.string({
     required_error: 'username is required',
@@ -18,7 +10,6 @@ const UserProfileSchema = z.object({
   password: z.string({
     required_error: 'Password is required',
   }),
-  profile: userProfileSchema.optional(),
 });
 
 const loginValidationSchema = z.object({
